@@ -9,6 +9,7 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
+    var prova : String = "prova"
     var background = SKSpriteNode(imageNamed: "sky")
     var playerFigure = SKSpriteNode(imageNamed: "fox1")
     var player = Player(x_position: 0, y_position: 0)
