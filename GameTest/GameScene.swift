@@ -9,7 +9,6 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    var prova : String = "prova"
     var background = SKSpriteNode(imageNamed: "sky")
     var playerFigure = SKSpriteNode(imageNamed: "fox1")
     var player = Player(x_position: 0, y_position: 0)
@@ -31,8 +30,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         physicsWorld.gravity = CGVector(dx: 0, dy: -9.81)
 
-        var ciaodomenic0 = 3
-        // ciao domenico
         self.camera = cameraNode
         
         self.addChild(cameraNode)
@@ -56,6 +53,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         playerFigure.zPosition = 1
 
+        lastXPixel = Int(-frame.size.width)/2
         generateRandomTerrain()
         
         self.addChild(background)
@@ -66,7 +64,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
         if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory && player.isJumping()) {
-            print("collisione")
             player.startEndJump()
         }
     }
@@ -116,42 +113,78 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             frameCounter = 0
         }
 
-        // Move the fox continuously
-        let moveAction = SKAction.moveBy(x: 1.0, y: 0, duration: 0)
+        let moveAction = SKAction.moveBy(x: 3.0, y: 0, duration: 0)
         playerFigure.run(moveAction)
 
-        // Update positions of background and camera
         background.position.x = playerFigure.position.x
         cameraNode.position.x = playerFigure.position.x
+        
+        if Int(playerFigure.position.x + frame.width/2) > lastXPixel {
+            generateRandomTerrain()
+        }
     }
     
     func generateRandomTerrain() {
         let terrainTypes = ["terrain1", "terrain2", "terrain3"]
         let terrainWidths = [48, 32, 32]
-        lastXPixel = Int(-frame.size.width)/2
+        
+        var jumpingTerrainGeneration = 0
         
         for _ in 0..<40{
-            let randomTerrainIndex = Int(arc4random_uniform(UInt32(terrainTypes.count)))
-            let randomWidth = terrainWidths[randomTerrainIndex]
-            let randomType = terrainTypes[randomTerrainIndex]
-            
-            let terrain = SKSpriteNode(imageNamed: randomType)
-            terrain.size = CGSize(width: randomWidth, height: 38)
+            if jumpingTerrainGeneration == 0
+            {
+                if(Int(arc4random_uniform(UInt32(10))) == 1)
+                {
+                    let terrain = SKSpriteNode(imageNamed: "endt2")
+                    terrain.position = CGPoint(x: lastXPixel + 32 / 2, y: Int(-frame.size.height)/2 + 80)
+                    terrain.size = CGSize(width: 32, height: 38)
+                    terrain.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
+                    terrain.physicsBody?.isDynamic = false
+                    terrain.physicsBody?.categoryBitMask = groundCategory
+                    terrain.physicsBody?.contactTestBitMask = playerCategory
+                    terrain.physicsBody?.restitution = 0 // No bouncing
+                    lastXPixel = lastXPixel + 32 / 2
+                    terrain.zPosition = 1
+                    self.addChild(terrain)
+                    
+                    lastXPixel = lastXPixel + 150 + Int(arc4random_uniform(UInt32(2)))*50
+                    
+                    let terrain2 = SKSpriteNode(imageNamed: "endt1")
+                    terrain2.position = CGPoint(x: lastXPixel + 32 / 2, y: Int(-frame.size.height)/2 + 80)
+                    terrain2.size = CGSize(width: 32, height: 38)
+                    terrain2.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
+                    terrain2.physicsBody?.isDynamic = false
+                    terrain2.physicsBody?.categoryBitMask = groundCategory
+                    terrain2.physicsBody?.contactTestBitMask = playerCategory
+                    terrain2.physicsBody?.restitution = 0 // No bouncing
+                    terrain2.zPosition = 1
+                    lastXPixel = lastXPixel + 32 / 2
+                    self.addChild(terrain2)
+                }
+                else
+                {
+                    let randomTerrainIndex = Int(arc4random_uniform(UInt32(terrainTypes.count)))
+                    let randomWidth = terrainWidths[randomTerrainIndex]
+                    let randomType = terrainTypes[randomTerrainIndex]
+                    
+                    let terrain = SKSpriteNode(imageNamed: randomType)
+                    terrain.size = CGSize(width: randomWidth, height: 38)
 
-            // Update randomX based on the accumulated width
-            let randomX = lastXPixel + randomWidth / 2
-            terrain.position = CGPoint(x: randomX, y: Int(-frame.size.height)/2 + 70)
+                    let randomX = lastXPixel + randomWidth / 2
+                    terrain.position = CGPoint(x: randomX, y: Int(-frame.size.height)/2 + 80)
 
-            terrain.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
-            terrain.physicsBody?.isDynamic = false
-            terrain.physicsBody?.categoryBitMask = groundCategory
-            terrain.physicsBody?.contactTestBitMask = playerCategory
-            terrain.physicsBody?.restitution = 0 // No bouncing
+                    terrain.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
+                    terrain.physicsBody?.isDynamic = false
+                    terrain.physicsBody?.categoryBitMask = groundCategory
+                    terrain.physicsBody?.contactTestBitMask = playerCategory
+                    terrain.physicsBody?.restitution = 0 // No bouncing
 
-            lastXPixel = randomX + randomWidth / 2
+                    lastXPixel = randomX + randomWidth / 2
 
-            terrain.zPosition = 1
-            self.addChild(terrain)
+                    terrain.zPosition = 1
+                    self.addChild(terrain)
+                }
+            }
         }
     }
 }
