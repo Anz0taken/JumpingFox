@@ -19,6 +19,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let playerCategory: UInt32 = 0x1 << 0
     let groundCategory: UInt32 = 0x1 << 1
+    
+    var lastXPixel = 0
 
     override func didMove(to view: SKView) {
         
@@ -29,7 +31,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         physicsWorld.gravity = CGVector(dx: 0, dy: -9.81)
 
-        // Set up the camera
+        var ciaodomenic0 = 3
+        // ciao domenico
         self.camera = cameraNode
         
         self.addChild(cameraNode)
@@ -62,7 +65,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory) {
+        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory && player.isJumping()) {
+            print("collisione")
             player.startEndJump()
         }
     }
@@ -81,7 +85,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Adjust the dy value for a faster jump
             let jumpAction = SKAction.applyImpulse(CGVector(dx: 0, dy: 50), duration: 0.5)
             playerFigure.run(jumpAction)
-
             player.startEndJump()
         }
     }
@@ -125,9 +128,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func generateRandomTerrain() {
         let terrainTypes = ["terrain1", "terrain2", "terrain3"]
         let terrainWidths = [48, 32, 32]
-        var lastXPixel = Int(-frame.size.width)/2
+        lastXPixel = Int(-frame.size.width)/2
         
-        for _ in 0..<50{
+        for _ in 0..<40{
             let randomTerrainIndex = Int(arc4random_uniform(UInt32(terrainTypes.count)))
             let randomWidth = terrainWidths[randomTerrainIndex]
             let randomType = terrainTypes[randomTerrainIndex]
