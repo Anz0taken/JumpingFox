@@ -1,0 +1,15 @@
+//
+//  info_plist.xcconfig
+//  GameTest
+//
+//  Created by Domenico Mennillo on 09/12/23.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+<key>NSMainNibFile</key>
+<string>Main</string>
+<key>UIInterfaceOrientation</key>
+<string>UIInterfaceOrientationLandscapeRight</string>
+<string>UIInterfaceOrientationLandscapeLeft</string>

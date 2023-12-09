@@ -10,6 +10,9 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
+    override var shouldAutorotate: Bool {
+        return false
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

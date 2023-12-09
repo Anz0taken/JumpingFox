@@ -13,6 +13,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerFigure = SKSpriteNode(imageNamed: "fox1")
     var player = Player(x_position: 0, y_position: 0)
     var cameraNode = SKCameraNode()
+    var numeroCollisioni = 0
     
     var foxTextures: [SKTexture] = []
     
@@ -20,6 +21,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let groundCategory: UInt32 = 0x1 << 1
     
     var lastXPixel = 0
+    var gameRunning = true
+    var canJump = false
 
     override func didMove(to view: SKView) {
         
@@ -29,6 +32,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
          }
         
         physicsWorld.gravity = CGVector(dx: 0, dy: -9.81)
+        physicsWorld.contactDelegate = self
 
         self.camera = cameraNode
         
@@ -63,9 +67,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory && player.isJumping()) {
+        // controllo la collisione tra fox e terreno
+        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory ) {
+            
+            // contatore per capire quando effettivamente la volpe tocca terra
+            numeroCollisioni += 1
+            print("collisione \(numeroCollisioni)")
+            
+            // siccome la volpe dovrebbe essere a terra setto la variabile canJump a vera per permettere il salto
+            canJump = true
             player.startEndJump()
         }
+    }
+    func didEnd(_ contact: SKPhysicsContact){
+        // controllo che la volpe e la terra non si toccano piu
+        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory ){
+             // faccio in modo che la volpe non possa saltare quando è in aria
+            canJump = false
+        }
+        
     }
     
     func touchDown(atPoint pos : CGPoint) {
@@ -78,9 +98,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if !player.isJumping() {
+        // controllo che la volpe possa saltare e con il tocco procedo a far effettuare il salto
+        if !player.isJumping() && canJump == true {
+            
+            let jumpForce: CGFloat = 50.0
+            
+            playerFigure.physicsBody?.velocity = CGVector.zero
+            
             // Adjust the dy value for a faster jump
-            let jumpAction = SKAction.applyImpulse(CGVector(dx: 0, dy: 50), duration: 0.5)
+            let jumpAction = SKAction.applyImpulse(CGVector(dx: 0, dy: jumpForce), duration: 0.5)
             playerFigure.run(jumpAction)
             player.startEndJump()
         }
@@ -122,7 +148,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if Int(playerFigure.position.x + frame.width/2) > lastXPixel {
             generateRandomTerrain()
         }
+        if playerFigure.position.y < -500 {
+                    endGame()
+            
+                }
     }
+    func endGame() {
+            gameRunning = false
+        
+
+            // messaggio di fine gioco
+            let gameOverLabel = SKLabelNode(text: "Game Over")
+            gameOverLabel.fontSize = 50
+            gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height / 2)
+            gameOverLabel.zPosition = 2
+            gameOverLabel.fontColor = .red
+            
+            background.position = CGPoint(x: size.width / 2, y: size.height / 2)
+            cameraNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
+            addChild(gameOverLabel)
+        }
+
     
     func generateRandomTerrain() {
         let terrainTypes = ["terrain1", "terrain2", "terrain3"]
