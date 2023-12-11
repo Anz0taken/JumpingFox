@@ -42,6 +42,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         background.position = CGPoint(x: 0, y: 0)
         background.size = self.size
+        background.zPosition = -1
 
         playerFigure.position = CGPoint(x: player.getX(), y: player.getY())
         playerFigure.size = CGSize(width: Player.PLAYER_WIDTH, height: Player.PLAYER_HEIGTH)
@@ -69,35 +70,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        // controllo la collisione tra fox e terreno
-//        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory ) {
-//            canJump = false
-//        }
-       
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
                 
-        // controllo che la volpe possa saltare e con il tocco procedo a far effettuare il salto
         if let playerPhysicsBody = playerFigure.physicsBody {
             if playerPhysicsBody.velocity.dy > 0 || playerPhysicsBody.velocity.dy < 0 {
                 
-                // Il player è per aria (sta salendo o cadendo)
-                // Aggiungi qui il codice da eseguire quando il player è per aria
             } else  {
                 let jumpForce: CGFloat = 50.0
-                            
-                            playerFigure.physicsBody?.velocity = CGVector.zero
-                            
-                            // Adjust the dy value for a faster jump
-                            let jumpAction = SKAction.applyImpulse(CGVector(dx: 0, dy: jumpForce), duration: 0.5)
-                            playerFigure.run(jumpAction)
-                            player.startEndJump()
-//                            canJump = true
-                            
-                            print("jump")
-                // Il player è a terra
-                // Aggiungi qui il codice da eseguire quando il player è a terra
+                
+                playerFigure.physicsBody?.velocity = CGVector.zero
+                
+                let jumpAction = SKAction.applyImpulse(CGVector(dx: 0, dy: jumpForce), duration: 0.5)
+                playerFigure.run(jumpAction)
+                player.startEndJump()
             }
         }
     }
@@ -150,7 +137,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let terrainTypes = ["terrain1", "terrain2", "terrain3"]
         let terrainWidths = [48, 32, 32]
         
-        
         if isStartTerrain {
             for _ in 0..<40{
                 let randomTerrainIndex = Int(arc4random_uniform(UInt32(terrainTypes.count)))
@@ -167,7 +153,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 terrain.physicsBody?.isDynamic = false
                 terrain.physicsBody?.categoryBitMask = groundCategory
                 terrain.physicsBody?.contactTestBitMask = playerCategory
-                terrain.physicsBody?.restitution = 0 // No bouncing
+                terrain.physicsBody?.restitution = 0
 
                 lastXPixel = randomX + randomWidth / 2
 
@@ -201,7 +187,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     terrain2.physicsBody?.isDynamic = false
                     terrain2.physicsBody?.categoryBitMask = groundCategory
                     terrain2.physicsBody?.contactTestBitMask = playerCategory
-                    terrain2.physicsBody?.restitution = 0 // No bouncing
+                    terrain2.physicsBody?.restitution = 0
                     terrain2.zPosition = 1
                     lastXPixel = lastXPixel + 32 / 2
                     self.addChild(terrain2)
@@ -225,11 +211,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     terrain.physicsBody?.restitution = 0 // No bouncing
 
                     lastXPixel = randomX + randomWidth / 2
+                    
+                    if Int(arc4random_uniform(UInt32(10))) == 1 {
+                        spawnTree(at: CGPoint(x: lastXPixel + 32 / 2, y: Int(-frame.size.height)/2 + 210))
+                    }
 
                     terrain.zPosition = 1
                     self.addChild(terrain)
                 }
             }
         }
+    }
+    
+    func spawnTree(at position: CGPoint) {
+        // Randomly determine whether the tree should be mirrored
+        let isMirrored = Bool.random()
+
+        // Create a tree with a random color
+        let treeColor = generateRandomTreeColor()
+        let treeImageName = isMirrored ? "tree_mirrored" : "tree"
+        
+        let tree = SKSpriteNode(imageNamed: treeImageName)
+        tree.size = CGSize(width: 123 * 2, height: 114 * 2)
+        tree.position = position
+        tree.zPosition = 0
+        tree.color = treeColor
+        tree.colorBlendFactor = 1.0
+
+        self.addChild(tree)
+    }
+
+    func generateRandomTreeColor() -> UIColor {
+        // Generate random RGB values
+        let red = CGFloat.random(in: 0.5...1.0)
+        let green = CGFloat.random(in: 0.3...0.7)
+        let blue = CGFloat.random(in: 0.1...0.5)
+
+        // Create a UIColor with the random RGB values
+        return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
     }
 }
