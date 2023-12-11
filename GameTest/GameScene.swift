@@ -31,7 +31,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 1...8 {
              let texture = SKTexture(imageNamed: "fox\(i)")
              foxTextures.append(texture)
-         }
+        }
         
         physicsWorld.gravity = CGVector(dx: 0, dy: -9.81)
         physicsWorld.contactDelegate = self
@@ -126,14 +126,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if Int(playerFigure.position.x + frame.width/2) > lastXPixel {
             generateRandomTerrain(isStartTerrain: false)
         }
+        
         if playerFigure.position.y < -500 {
                     endGame()
-            
-                }
+        }
     }
     func endGame() {
             gameRunning = false
-        
 
             // messaggio di fine gioco
             let gameOverLabel = SKLabelNode(text: "Game Over")
@@ -141,7 +140,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height / 2)
             gameOverLabel.zPosition = 2
             gameOverLabel.fontColor = .red
-            
+
             background.position = CGPoint(x: size.width / 2, y: size.height / 2)
             cameraNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
             addChild(gameOverLabel)
