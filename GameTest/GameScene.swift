@@ -22,7 +22,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var lastXPixel = 0
     var gameRunning = true
-    var canJump = false
+//    var canJump = false
     
     let IS_JUMP_CHUNK = 1
 
@@ -70,28 +70,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
         // controllo la collisione tra fox e terreno
-        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory ) {
-            canJump = false
-        }
+//        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory ) {
+//            canJump = false
+//        }
        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
                 
         // controllo che la volpe possa saltare e con il tocco procedo a far effettuare il salto
-        if !canJump {
-            
-            let jumpForce: CGFloat = 50.0
-            
-            playerFigure.physicsBody?.velocity = CGVector.zero
-            
-            // Adjust the dy value for a faster jump
-            let jumpAction = SKAction.applyImpulse(CGVector(dx: 0, dy: jumpForce), duration: 0.5)
-            playerFigure.run(jumpAction)
-            player.startEndJump()
-            canJump = true
-            
-            print("jump")
+        if let playerPhysicsBody = playerFigure.physicsBody {
+            if playerPhysicsBody.velocity.dy > 0 || playerPhysicsBody.velocity.dy < 0 {
+                
+                // Il player è per aria (sta salendo o cadendo)
+                // Aggiungi qui il codice da eseguire quando il player è per aria
+            } else  {
+                let jumpForce: CGFloat = 50.0
+                            
+                            playerFigure.physicsBody?.velocity = CGVector.zero
+                            
+                            // Adjust the dy value for a faster jump
+                            let jumpAction = SKAction.applyImpulse(CGVector(dx: 0, dy: jumpForce), duration: 0.5)
+                            playerFigure.run(jumpAction)
+                            player.startEndJump()
+//                            canJump = true
+                            
+                            print("jump")
+                // Il player è a terra
+                // Aggiungi qui il codice da eseguire quando il player è a terra
+            }
         }
     }
     
