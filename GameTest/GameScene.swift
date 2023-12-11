@@ -23,8 +23,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var lastXPixel = 0
     var gameRunning = true
     var canJump = false
-    
-    let TO_JUMP_CHANCE = 1
 
     override func didMove(to view: SKView) {
         
@@ -60,7 +58,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         playerFigure.zPosition = 1
 
         lastXPixel = Int(-frame.size.width)/2
-        generateRandomTerrain(isFirstTerrain: true)
+        generateRandomTerrain()
         
         self.addChild(background)
         self.addChild(playerFigure)
@@ -72,23 +70,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // controllo la collisione tra fox e terreno
         if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory ) {
             
-            // contatore per capire quando effettivamente la volpe tocca terra
-            numeroCollisioni += 1
-            print("collisione \(numeroCollisioni)")
-            
-            // siccome la volpe dovrebbe essere a terra setto la variabile canJump a vera per permettere il salto
-            canJump = true
-            player.startEndJump()
+        canJump = false
         }
+       
     }
-    func didEnd(_ contact: SKPhysicsContact){
-        // controllo che la volpe e la terra non si toccano piu
-        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory ){
-             // faccio in modo che la volpe non possa saltare quando è in aria
-            canJump = false
-        }
-        
-    }
+//    func didEnd(_ contact: SKPhysicsContact){
+//        // controllo che la volpe e la terra non si toccano piu
+//        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory ){
+//             // faccio in modo che la volpe non possa saltare quando è in aria
+//            canJump = false
+//        }
+//
+//    }
     
     func touchDown(atPoint pos : CGPoint) {
     }
@@ -100,8 +93,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        print("Stai cliccando")
+        
         // controllo che la volpe possa saltare e con il tocco procedo a far effettuare il salto
-        if !player.isJumping() && canJump == true {
+        if !canJump {
             
             let jumpForce: CGFloat = 50.0
             
@@ -111,6 +107,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let jumpAction = SKAction.applyImpulse(CGVector(dx: 0, dy: jumpForce), duration: 0.5)
             playerFigure.run(jumpAction)
             player.startEndJump()
+            canJump = true
+            
+            print("jump")
         }
     }
     
@@ -148,16 +147,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         cameraNode.position.x = playerFigure.position.x
         
         if Int(playerFigure.position.x + frame.width/2) > lastXPixel {
-            generateRandomTerrain(isFirstTerrain: false)
+            generateRandomTerrain()
         }
-        
         if playerFigure.position.y < -500 {
-            endGame()
-        }
+                    endGame()
+            
+                }
     }
-    
     func endGame() {
             gameRunning = false
+        
+
             // messaggio di fine gioco
             let gameOverLabel = SKLabelNode(text: "Game Over")
             gameOverLabel.fontSize = 50
@@ -171,14 +171,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
 
     
-    func generateRandomTerrain(isFirstTerrain: Bool) {
+    func generateRandomTerrain() {
         let terrainTypes = ["terrain1", "terrain2", "terrain3"]
         let terrainWidths = [48, 32, 32]
         
-        if isFirstTerrain == false
-        {
-            for _ in 0..<40{
-                if(Int(arc4random_uniform(UInt32(10))) == TO_JUMP_CHANCE)
+        var jumpingTerrainGeneration = 0
+        
+        for _ in 0..<40{
+            if jumpingTerrainGeneration == 0
+            {
+                if(Int(arc4random_uniform(UInt32(10))) == 1)
                 {
                     let terrain = SKSpriteNode(imageNamed: "endt2")
                     terrain.position = CGPoint(x: lastXPixel + 32 / 2, y: Int(-frame.size.height)/2 + 80)
@@ -229,31 +231,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     terrain.zPosition = 1
                     self.addChild(terrain)
                 }
-            }
-        }
-        else
-        {
-            for _ in 0..<40{
-                let randomTerrainIndex = Int(arc4random_uniform(UInt32(terrainTypes.count)))
-                let randomWidth = terrainWidths[randomTerrainIndex]
-                let randomType = terrainTypes[randomTerrainIndex]
-                
-                let terrain = SKSpriteNode(imageNamed: randomType)
-                terrain.size = CGSize(width: randomWidth, height: 38)
-
-                let randomX = lastXPixel + randomWidth / 2
-                terrain.position = CGPoint(x: randomX, y: Int(-frame.size.height)/2 + 80)
-
-                terrain.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
-                terrain.physicsBody?.isDynamic = false
-                terrain.physicsBody?.categoryBitMask = groundCategory
-                terrain.physicsBody?.contactTestBitMask = playerCategory
-                terrain.physicsBody?.restitution = 0 // No bouncing
-
-                lastXPixel = randomX + randomWidth / 2
-
-                terrain.zPosition = 1
-                self.addChild(terrain)
             }
         }
     }
