@@ -75,28 +75,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
        
     }
-//    func didEnd(_ contact: SKPhysicsContact){
-//        // controllo che la volpe e la terra non si toccano piu
-//        if (contact.bodyA.categoryBitMask == groundCategory) || (contact.bodyB.categoryBitMask == groundCategory ){
-//             // faccio in modo che la volpe non possa saltare quando è in aria
-//            canJump = false
-//        }
-//
-//    }
-    
-    func touchDown(atPoint pos : CGPoint) {
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        print("Stai cliccando")
-        
+                
         // controllo che la volpe possa saltare e con il tocco procedo a far effettuare il salto
         if !canJump {
             
@@ -112,18 +93,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             print("jump")
         }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
     }
     
     var frameCounter: Int = 0
