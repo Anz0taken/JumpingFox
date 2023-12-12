@@ -73,21 +73,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-                
+             
+       
         if let playerPhysicsBody = playerFigure.physicsBody {
             if playerPhysicsBody.velocity.dy > 0 || playerPhysicsBody.velocity.dy < 0 {
-                
+               
             } else  {
-                let jumpForce: CGFloat = 50.0
+                let jumpForce: CGFloat = 30.0
                 
-                playerFigure.physicsBody?.velocity = CGVector.zero
-                
-                let jumpAction = SKAction.applyImpulse(CGVector(dx: 0, dy: jumpForce), duration: 0.5)
-                playerFigure.run(jumpAction)
-                player.startEndJump()
+                playerFigure.physicsBody?.applyImpulse(CGVector(dx: 0, dy: jumpForce))
+               
             }
         }
     }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        playerFigure.physicsBody?.velocity.dy = -12.5
+
+    }
+    
     
     var frameCounter: Int = 0
     override func update(_ currentTime: TimeInterval) {
@@ -115,23 +118,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if playerFigure.position.y < -500 {
-                    endGame()
+            gameRunning = false
+            playerFigure.removeFromParent()
+            let scores : Int = Int(playerFigure.position.x)
+            UserDefaults.standard.set(scores, forKey: "Score")
+            
+            if  gameRunning == false {
+                let gameOverScene = GameOverScene(size: size)
+                gameOverScene.scaleMode = scaleMode
+                view!.presentScene(gameOverScene)
+            
+            }
+                    
+            
         }
     }
-    func endGame() {
-            gameRunning = false
-
-            // messaggio di fine gioco
-            let gameOverLabel = SKLabelNode(text: "Game Over")
-            gameOverLabel.fontSize = 50
-            gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height / 2)
-            gameOverLabel.zPosition = 2
-            gameOverLabel.fontColor = .red
-
-            background.position = CGPoint(x: size.width / 2, y: size.height / 2)
-            cameraNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
-            addChild(gameOverLabel)
-        }
+   
 
     func generateRandomTerrain(isStartTerrain: Bool) {
         let terrainTypes = ["terrain1", "terrain2", "terrain3"]
@@ -250,4 +252,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Create a UIColor with the random RGB values
         return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
     }
+
+    
+    
+//    func aggiungiPunteggio(_ nuovoPunteggio: Int) {
+//        var miglioriPunteggi = UserDefaults.standard.array(forKey: "MiglioriPunteggi") as? [Int] ?? []
+//
+//        // Aggiungi il nuovo punteggio solo se è più grande di almeno uno dei primi 5
+//        if miglioriPunteggi.isEmpty || nuovoPunteggio > miglioriPunteggi.last! {
+//            miglioriPunteggi.append(nuovoPunteggio)
+//            miglioriPunteggi.sort(by: >) // Ordina in ordine decrescente
+//            miglioriPunteggi = Array(miglioriPunteggi.prefix(5)) // Mantieni solo i primi 5
+//
+//            UserDefaults.standard.set(miglioriPunteggi, forKey: "MiglioriPunteggi")
+//            print("Nuovo punteggio aggiunto con successo.")
+//        } else {
+//            print("Il punteggio non è sufficiente per entrare nella lista dei migliori 5.")
+//        }
+//    }
 }

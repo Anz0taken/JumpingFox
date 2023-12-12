@@ -20,6 +20,7 @@
 		A0CDEDDE2B1DD51A006F7AD8 /* GameTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDEDDD2B1DD51A006F7AD8 /* GameTestTests.swift */; };
 		A0CDEDE82B1DD51A006F7AD8 /* GameTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDEDE72B1DD51A006F7AD8 /* GameTestUITests.swift */; };
 		A0CDEDEA2B1DD51A006F7AD8 /* GameTestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDEDE92B1DD51A006F7AD8 /* GameTestUITestsLaunchTests.swift */; };
+		DAC6BAF72B2867D000857506 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC6BAF62B2867D000857506 /* GameOverScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		A0CDEDE32B1DD51A006F7AD8 /* GameTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0CDEDE72B1DD51A006F7AD8 /* GameTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTestUITests.swift; sourceTree = "<group>"; };
 		A0CDEDE92B1DD51A006F7AD8 /* GameTestUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTestUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DAC6BAF62B2867D000857506 /* GameOverScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 		DAD8F62B2B24BDB50005018D /* info_plist.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = info_plist.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +124,7 @@
 				A0CDEDC72B1DD519006F7AD8 /* Actions.sks */,
 				A0CDEDC92B1DD519006F7AD8 /* GameScene.swift */,
 				A0CDEDCB2B1DD519006F7AD8 /* GameViewController.swift */,
+				DAC6BAF62B2867D000857506 /* GameOverScene.swift */,
 				A0CDEDCD2B1DD519006F7AD8 /* Main.storyboard */,
 				A0CDEDD02B1DD51A006F7AD8 /* Assets.xcassets */,
 				A0CDEDD22B1DD51A006F7AD8 /* LaunchScreen.storyboard */,
@@ -284,6 +287,7 @@
 				A075290D2B1F33370068FD50 /* PlayerClass.swift in Sources */,
 				A0CDEDCC2B1DD519006F7AD8 /* GameViewController.swift in Sources */,
 				A0CDEDC42B1DD519006F7AD8 /* AppDelegate.swift in Sources */,
+				DAC6BAF72B2867D000857506 /* GameOverScene.swift in Sources */,
 				A07529102B1F38CA0068FD50 /* ObjectClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -466,7 +470,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X6PRJW82M3;
+				DEVELOPMENT_TEAM = 2GK6HNH46H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -494,7 +498,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = X6PRJW82M3;
+				DEVELOPMENT_TEAM = 2GK6HNH46H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
