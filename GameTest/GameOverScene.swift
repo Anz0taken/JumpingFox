@@ -13,19 +13,22 @@ class GameOverScene: SKScene {
         // Questo metodo viene chiamato quando la scena è stata presentata
 
         // Aggiungi il background
-//        let background = SKSpriteNode(imageNamed: "sky") // Sostituisci "backgroundImage" con il nome effettivo dell'immagine
-//        background.position = CGPoint(x: size.width / 2, y: size.height / 2)
-        
-//        addChild(background)
+        let background = SKSpriteNode(imageNamed: "sky") // Sostituisci "backgroundImage" con il nome effettivo dell'immagine
+     
+        background.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        background.size = self.size
+        background.zPosition = -1
+        addChild(background)
 
        
 //        aggiungiPunteggio(scores)
 //
+       
         
-        let sco = UserDefaults.standard.string(forKey: "chiaveUnica")
+        let sco = UserDefaults.standard.string(forKey: "score")
             let gameOverLabel = SKSpriteNode(imageNamed: "Game Over Fatt")
             gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 + 50)
-        let scoreLabel = SKLabelNode(text: "Score : \(String(describing: UserDefaults.standard.integer(forKey: "score"))) ")
+        let scoreLabel = SKLabelNode(text: "Score : \(String(describing: sco)) ")
             scoreLabel.fontName = "Aclonica"
             scoreLabel.fontSize = 50
             scoreLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 + 160)
