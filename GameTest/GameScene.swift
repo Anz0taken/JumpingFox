@@ -122,6 +122,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             playerFigure.removeFromParent()
             let scores : Int = Int(playerFigure.position.x)
             UserDefaults.standard.set(scores, forKey: "Score")
+            UserDefaults.standard.synchronize()
+            print(UserDefaults.standard.integer(forKey: "Score"))
             
             if  gameRunning == false {
                 let gameOverScene = GameOverScene(size: size)

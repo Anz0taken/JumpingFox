@@ -25,10 +25,12 @@ class GameOverScene: SKScene {
 //
        
         
-        let sco = UserDefaults.standard.string(forKey: "score")
+       
             let gameOverLabel = SKSpriteNode(imageNamed: "Game Over Fatt")
             gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 + 50)
-        let scoreLabel = SKLabelNode(text: "Score : \(String(describing: sco)) ")
+        
+        let mioScore = UserDefaults.standard.integer(forKey: "Score")
+        let scoreLabel = SKLabelNode(text: "Score : \(mioScore) ")
             scoreLabel.fontName = "Aclonica"
             scoreLabel.fontSize = 50
             scoreLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 + 160)
