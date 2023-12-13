@@ -8,15 +8,20 @@
 import SpriteKit
 import GameplayKit
 
+
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
+
     var background = SKSpriteNode(imageNamed: "sky")
     var playerFigure = SKSpriteNode(imageNamed: "fox1")
     var player = Player(x_position: 0, y_position: 0)
     var cameraNode = SKCameraNode()
     var numeroCollisioni = 0
-    
+    let jumpSound = SKAudioNode(fileNamed: "Jump Effect.mp3")
+    let backgroundSound = SKAudioNode(fileNamed: "Music.mp3")
+   
     var foxTextures: [SKTexture] = []
-    
+    var onAir : Bool = false
     let playerCategory: UInt32 = 0x1 << 0
     let groundCategory: UInt32 = 0x1 << 1
     
@@ -27,7 +32,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let IS_JUMP_CHUNK = 1
 
     override func didMove(to view: SKView) {
-        
+            
+            
+            self.addChild(backgroundSound)
+            
         for i in 1...8 {
              let texture = SKTexture(imageNamed: "fox\(i)")
              foxTextures.append(texture)
@@ -66,6 +74,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(background)
         self.addChild(playerFigure)
         
+        self.addChild(jumpSound)
+        jumpSound.run(SKAction.stop())
+        
         physicsWorld.contactDelegate = self
     }
     
@@ -73,21 +84,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-             
+        
        
+        jumpSound.run(SKAction.stop())
+    
         if let playerPhysicsBody = playerFigure.physicsBody {
             if playerPhysicsBody.velocity.dy > 0 || playerPhysicsBody.velocity.dy < 0 {
                
             } else  {
+                jumpSound.run(SKAction.play())
                 let jumpForce: CGFloat = 30.0
                 
                 playerFigure.physicsBody?.applyImpulse(CGVector(dx: 0, dy: jumpForce))
-               
+              
+                
             }
+            
         }
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        playerFigure.physicsBody?.velocity.dy = -12.5
+        
+        let ritardo = SKAction.wait(forDuration: 1.0)
+
+        // Crea l'azione che vuoi eseguire dopo il ritardo
+        let azioneSuccessiva = SKAction.run {
+            self.jumpSound.run(SKAction.stop())
+        }
+
+        // Crea una sequenza di azioni che include il ritardo e l'azione successiva
+        let sequenza = SKAction.sequence([ritardo, azioneSuccessiva])
+
+        // Esegui la sequenza di azioni
+        playerFigure.run(sequenza)
 
     }
     
@@ -124,7 +152,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             UserDefaults.standard.set(scores, forKey: "Score")
             UserDefaults.standard.synchronize()
             print(UserDefaults.standard.integer(forKey: "Score"))
-            
+          
             if  gameRunning == false {
                 let gameOverScene = GameOverScene(size: size)
                 gameOverScene.scaleMode = scaleMode

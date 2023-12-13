@@ -10,6 +10,7 @@ import SpriteKit
 class GameOverScene: SKScene {
 
     override func didMove(to view: SKView) {
+        
         // Questo metodo viene chiamato quando la scena è stata presentata
 
         // Aggiungi il background
