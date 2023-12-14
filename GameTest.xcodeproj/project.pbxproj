@@ -20,6 +20,8 @@
 		A0CDEDDE2B1DD51A006F7AD8 /* GameTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDEDDD2B1DD51A006F7AD8 /* GameTestTests.swift */; };
 		A0CDEDE82B1DD51A006F7AD8 /* GameTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDEDE72B1DD51A006F7AD8 /* GameTestUITests.swift */; };
 		A0CDEDEA2B1DD51A006F7AD8 /* GameTestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDEDE92B1DD51A006F7AD8 /* GameTestUITestsLaunchTests.swift */; };
+		DA9309FE2B289AD900BC1A21 /* Music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA9309FD2B289AD900BC1A21 /* Music.mp3 */; };
+		DA930A002B28A13100BC1A21 /* Jump Effect.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA9309FF2B28A13100BC1A21 /* Jump Effect.mp3 */; };
 		DAC6BAF72B2867D000857506 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC6BAF62B2867D000857506 /* GameOverScene.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +59,8 @@
 		A0CDEDE32B1DD51A006F7AD8 /* GameTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0CDEDE72B1DD51A006F7AD8 /* GameTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTestUITests.swift; sourceTree = "<group>"; };
 		A0CDEDE92B1DD51A006F7AD8 /* GameTestUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTestUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DA9309FD2B289AD900BC1A21 /* Music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Music.mp3; sourceTree = "<group>"; };
+		DA9309FF2B28A13100BC1A21 /* Jump Effect.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Jump Effect.mp3"; sourceTree = "<group>"; };
 		DAC6BAF62B2867D000857506 /* GameOverScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 		DAD8F62B2B24BDB50005018D /* info_plist.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = info_plist.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,6 +130,8 @@
 				A0CDEDCB2B1DD519006F7AD8 /* GameViewController.swift */,
 				DAC6BAF62B2867D000857506 /* GameOverScene.swift */,
 				A0CDEDCD2B1DD519006F7AD8 /* Main.storyboard */,
+				DA9309FD2B289AD900BC1A21 /* Music.mp3 */,
+				DA9309FF2B28A13100BC1A21 /* Jump Effect.mp3 */,
 				A0CDEDD02B1DD51A006F7AD8 /* Assets.xcassets */,
 				A0CDEDD22B1DD51A006F7AD8 /* LaunchScreen.storyboard */,
 				DAD8F62B2B24BDB50005018D /* info_plist.xcconfig */,
@@ -254,8 +260,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA9309FE2B289AD900BC1A21 /* Music.mp3 in Resources */,
 				A0CDEDCF2B1DD519006F7AD8 /* Main.storyboard in Resources */,
 				A0CDEDC62B1DD519006F7AD8 /* GameScene.sks in Resources */,
+				DA930A002B28A13100BC1A21 /* Jump Effect.mp3 in Resources */,
 				A0CDEDD12B1DD51A006F7AD8 /* Assets.xcassets in Resources */,
 				A0CDEDD42B1DD51A006F7AD8 /* LaunchScreen.storyboard in Resources */,
 				A0CDEDC82B1DD519006F7AD8 /* Actions.sks in Resources */,
