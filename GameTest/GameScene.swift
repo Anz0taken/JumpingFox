@@ -180,7 +180,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     terrain.zPosition = 1
                     self.addChild(terrain)
                     
-                    lastXPixel = lastXPixel + 150 + Int(arc4random_uniform(UInt32(2)))*50
+                    lastXPixel = lastXPixel + 100 + Int(arc4random_uniform(UInt32(2)))*50
                     
                     let terrain2 = SKSpriteNode(imageNamed: "endt1")
                     terrain2.position = CGPoint(x: lastXPixel + 32 / 2, y: Int(-frame.size.height)/2 + 80)
