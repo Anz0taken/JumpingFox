@@ -253,14 +253,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if(Int(arc4random_uniform(UInt32(2))) == 1)
         {
-            terrainYOffset += (Int(arc4random_uniform(UInt32(2)))) * 20
+            terrainYOffset += (Int(arc4random_uniform(UInt32(4)))) * 20
             
             if terrainYOffset > 380 {
                 terrainYOffset = 380;
             }
         }
         else {
-            terrainYOffset += (Int(arc4random_uniform(UInt32(2))) - 2) * 20
+            terrainYOffset += (Int(arc4random_uniform(UInt32(4))) - 2) * 20
             
             if terrainYOffset < 0 {
                 terrainYOffset = 0
