@@ -25,11 +25,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let playerCategory: UInt32 = 0x1 << 0
     let groundCategory: UInt32 = 0x1 << 1
     
+    let terrainHeight = 38
+    
     var lastXPixel = 0
     var gameRunning = true
 //    var canJump = false
     
     let IS_JUMP_CHUNK = 1
+    
+    var terrainYOffset = 100;
 
     override func didMove(to view: SKView) {
             
@@ -84,39 +88,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-       
-        jumpSound.run(SKAction.stop())
-    
         if let playerPhysicsBody = playerFigure.physicsBody {
-            if playerPhysicsBody.velocity.dy > 0 || playerPhysicsBody.velocity.dy < 0 {
-               
-            } else  {
+            // Check if the player is on the ground
+            if playerPhysicsBody.velocity.dy == 0 {
                 jumpSound.run(SKAction.play())
                 let jumpForce: CGFloat = 30.0
-                
                 playerFigure.physicsBody?.applyImpulse(CGVector(dx: 0, dy: jumpForce))
-              
-                
             }
-            
         }
     }
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        let ritardo = SKAction.wait(forDuration: 1.0)
 
-        // Crea l'azione che vuoi eseguire dopo il ritardo
+    // Update your touchesEnded method
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let ritardo = SKAction.wait(forDuration: 1.0)
         let azioneSuccessiva = SKAction.run {
             self.jumpSound.run(SKAction.stop())
         }
-
-        // Crea una sequenza di azioni che include il ritardo e l'azione successiva
         let sequenza = SKAction.sequence([ritardo, azioneSuccessiva])
-
-        // Esegui la sequenza di azioni
         playerFigure.run(sequenza)
-
     }
     
     
@@ -151,7 +140,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let scores : Int = Int(playerFigure.position.x)
             UserDefaults.standard.set(scores, forKey: "Score")
             UserDefaults.standard.synchronize()
-            print(UserDefaults.standard.integer(forKey: "Score"))
           
             if  gameRunning == false {
                 let gameOverScene = GameOverScene(size: size)
@@ -164,99 +152,123 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
    
-
     func generateRandomTerrain(isStartTerrain: Bool) {
+        if isStartTerrain {
+            generateStartTerrain()
+        } else {
+            generateRegularTerrain()
+        }
+    }
+
+    func generateStartTerrain() {
         let terrainTypes = ["terrain1", "terrain2", "terrain3"]
         let terrainWidths = [48, 32, 32]
-        
-        if isStartTerrain {
-            for _ in 0..<40{
-                let randomTerrainIndex = Int(arc4random_uniform(UInt32(terrainTypes.count)))
-                let randomWidth = terrainWidths[randomTerrainIndex]
-                let randomType = terrainTypes[randomTerrainIndex]
-                
-                let terrain = SKSpriteNode(imageNamed: randomType)
-                terrain.size = CGSize(width: randomWidth, height: 38)
 
-                let randomX = lastXPixel + randomWidth / 2
-                terrain.position = CGPoint(x: randomX, y: Int(-frame.size.height)/2 + 80)
-
-                terrain.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
-                terrain.physicsBody?.isDynamic = false
-                terrain.physicsBody?.categoryBitMask = groundCategory
-                terrain.physicsBody?.contactTestBitMask = playerCategory
-                terrain.physicsBody?.restitution = 0
-
-                lastXPixel = randomX + randomWidth / 2
-
-                terrain.zPosition = 1
-                self.addChild(terrain)
-            }
+        for _ in 0..<40 {
+            let (randomType, randomWidth) = getRandomTerrainTypeAndWidth(types: terrainTypes, widths: terrainWidths)
+            let terrain = createTerrain(imageNamed: randomType, width: randomWidth, height: terrainHeight)
+            positionAndAddTerrain(terrain, yOffset: terrainYOffset)
+            positionAndAddUnderground(lastWidth: randomWidth, yOffset: terrainYOffset)
         }
-        else
-        {
-            for _ in 0..<40{
-                if(Int(arc4random_uniform(UInt32(10))) == IS_JUMP_CHUNK)
-                {
-                    let terrain = SKSpriteNode(imageNamed: "endt2")
-                    terrain.position = CGPoint(x: lastXPixel + 32 / 2, y: Int(-frame.size.height)/2 + 80)
-                    terrain.size = CGSize(width: 32, height: 38)
-                    terrain.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
-                    terrain.physicsBody?.isDynamic = false
-                    terrain.physicsBody?.categoryBitMask = groundCategory
-                    terrain.physicsBody?.contactTestBitMask = playerCategory
-                    terrain.physicsBody?.restitution = 0 // No bouncing
-                    lastXPixel = lastXPixel + 32 / 2
-                    terrain.zPosition = 1
-                    self.addChild(terrain)
-                    
-                    lastXPixel = lastXPixel + 100 + Int(arc4random_uniform(UInt32(2)))*50
-                    
-                    let terrain2 = SKSpriteNode(imageNamed: "endt1")
-                    terrain2.position = CGPoint(x: lastXPixel + 32 / 2, y: Int(-frame.size.height)/2 + 80)
-                    terrain2.size = CGSize(width: 32, height: 38)
-                    terrain2.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
-                    terrain2.physicsBody?.isDynamic = false
-                    terrain2.physicsBody?.categoryBitMask = groundCategory
-                    terrain2.physicsBody?.contactTestBitMask = playerCategory
-                    terrain2.physicsBody?.restitution = 0
-                    terrain2.zPosition = 1
-                    lastXPixel = lastXPixel + 32 / 2
-                    self.addChild(terrain2)
-                }
-                else
-                {
-                    let randomTerrainIndex = Int(arc4random_uniform(UInt32(terrainTypes.count)))
-                    let randomWidth = terrainWidths[randomTerrainIndex]
-                    let randomType = terrainTypes[randomTerrainIndex]
-                    
-                    let terrain = SKSpriteNode(imageNamed: randomType)
-                    terrain.size = CGSize(width: randomWidth, height: 38)
+    }
 
-                    let randomX = lastXPixel + randomWidth / 2
-                    terrain.position = CGPoint(x: randomX, y: Int(-frame.size.height)/2 + 80)
+    func generateRegularTerrain() {
+        for _ in 0..<40 {
+            if shouldSpawnJumpChunk() {
+                generateJumpChunk()
+            } else {
+                let terrainTypes = ["terrain1", "terrain2", "terrain3"]
+                let terrainWidths = [48, 32, 32]
+                let (randomType, randomWidth) = getRandomTerrainTypeAndWidth(types: terrainTypes, widths: terrainWidths)
+                let terrain = createTerrain(imageNamed: randomType, width: randomWidth, height: terrainHeight)
+                positionAndAddTerrain(terrain, yOffset: terrainYOffset)
+                positionAndAddUnderground(lastWidth: randomWidth, yOffset: terrainYOffset)
 
-                    terrain.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
-                    terrain.physicsBody?.isDynamic = false
-                    terrain.physicsBody?.categoryBitMask = groundCategory
-                    terrain.physicsBody?.contactTestBitMask = playerCategory
-                    terrain.physicsBody?.restitution = 0 // No bouncing
-
-                    lastXPixel = randomX + randomWidth / 2
-                    
-                    if Int(arc4random_uniform(UInt32(10))) == 1 {
-                        spawnTree(at: CGPoint(x: lastXPixel + 32 / 2, y: Int(-frame.size.height)/2 + 210))
-                    }
-
-                    terrain.zPosition = 1
-                    self.addChild(terrain)
+                if Int(arc4random_uniform(UInt32(10))) == 1 {
+                    spawnTree(at: CGPoint(x: lastXPixel - 20, y: Int(-frame.size.height)/2 + 206), yOffset: terrainYOffset)
                 }
             }
         }
     }
     
-    func spawnTree(at position: CGPoint) {
-        // Randomly determine whether the tree should be mirrored
+    func positionAndAddUnderground(lastWidth: Int, yOffset: Int) {
+        let terrainHeight = 64
+        var backgroundTerrainX = lastXPixel - (lastWidth) / 2
+        var actualY = yOffset + 38
+        var terrainName = (lastWidth == 32) ? "underground1" : "underground2"
+
+        while actualY > -64 {
+            let terrain = createTerrain(imageNamed: terrainName, width: lastWidth, height: terrainHeight)
+            terrain.position = CGPoint(x: backgroundTerrainX, y: Int(-frame.size.height) / 2 + actualY)
+            self.addChild(terrain)
+            actualY -= terrainHeight;
+        }
+    }
+
+    func generateJumpChunk() {
+        let terrain = createTerrain(imageNamed: "endt2", width: 32, height: terrainHeight)
+        positionAndAddTerrain(terrain, yOffset: terrainYOffset)
+        positionAndAddUnderground(lastWidth: 32, yOffset: terrainYOffset)
+        
+        lastXPixel += 100 + Int(arc4random_uniform(UInt32(2))) * 50
+
+        adjustTerrainYOffset()
+        
+        let terrain2 = createTerrain(imageNamed: "endt1", width: 32, height: terrainHeight)
+        positionAndAddTerrain(terrain2, yOffset: terrainYOffset)
+        positionAndAddUnderground(lastWidth: 32, yOffset: terrainYOffset)
+    }
+
+    func getRandomTerrainTypeAndWidth(types: [String], widths: [Int]) -> (String, Int) {
+        let randomTerrainIndex = Int(arc4random_uniform(UInt32(types.count)))
+        let randomType = types[randomTerrainIndex]
+        let randomWidth = widths[randomTerrainIndex]
+        return (randomType, randomWidth)
+    }
+
+    func createTerrain(imageNamed: String, width: Int, height: Int) -> SKSpriteNode {
+        let terrain = SKSpriteNode(imageNamed: imageNamed)
+        terrain.size = CGSize(width: width, height: height)
+        terrain.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
+        terrain.physicsBody?.isDynamic = false
+        terrain.physicsBody?.categoryBitMask = groundCategory
+        terrain.physicsBody?.contactTestBitMask = playerCategory
+        terrain.physicsBody?.restitution = 0 // No bouncing
+        terrain.zPosition = 1
+        return terrain
+    }
+
+    func positionAndAddTerrain(_ terrain: SKSpriteNode, yOffset: Int) {
+        let randomX = lastXPixel + Int(terrain.size.width) / 2
+        terrain.position = CGPoint(x: randomX, y: Int(-frame.size.height)/2 + 80 + yOffset)
+        lastXPixel = randomX + Int(terrain.size.width) / 2
+        self.addChild(terrain)
+    }
+
+    func shouldSpawnJumpChunk() -> Bool {
+        return Int(arc4random_uniform(UInt32(3))) == IS_JUMP_CHUNK
+    }
+
+    func adjustTerrainYOffset() {
+        
+        if(Int(arc4random_uniform(UInt32(2))) == 1)
+        {
+            terrainYOffset += (Int(arc4random_uniform(UInt32(2)))) * 20
+            
+            if terrainYOffset > 380 {
+                terrainYOffset = 380;
+            }
+        }
+        else {
+            terrainYOffset += (Int(arc4random_uniform(UInt32(2))) - 2) * 20
+            
+            if terrainYOffset < 0 {
+                terrainYOffset = 0
+            }
+        }
+    }
+    
+    func spawnTree(at position: CGPoint, yOffset: Int) {
         let isMirrored = Bool.random()
 
         // Create a tree with a random color
@@ -265,7 +277,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let tree = SKSpriteNode(imageNamed: treeImageName)
         tree.size = CGSize(width: 123 * 2, height: 114 * 2)
-        tree.position = position
+        tree.position = CGPoint(x: position.x, y: position.y + CGFloat(yOffset))
         tree.zPosition = 0
         tree.color = treeColor
         tree.colorBlendFactor = 1.0
