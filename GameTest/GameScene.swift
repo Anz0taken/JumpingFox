@@ -9,9 +9,9 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    // prova dio cane
     var background = SKSpriteNode(imageNamed: "sky")
     var playerFigure = SKSpriteNode(imageNamed: "fox1")
+    let cloudsBackground = SKSpriteNode(imageNamed: "clouds")
     var player = Player(x_position: 0, y_position: 0)
     var cameraNode = SKCameraNode()
     var numeroCollisioni = 0
@@ -24,13 +24,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let groundCategory: UInt32 = 0x1 << 1
     let penCategory: UInt32 = 0x1 << 2
 
-    
     let terrainHeight = 38
     
     var lastXPixel = 0
     var gameRunning = true
-//    var canJump = false
-    
+
     let IS_JUMP_CHUNK = 1
     
     var terrainYOffset = 100;
@@ -38,9 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var generatedTerrainNodes: [SKSpriteNode] = []
 
     override func didMove(to view: SKView) {
-            
-            
-            self.addChild(backgroundSound)
+        self.addChild(backgroundSound)
             
         for i in 1...8 {
              let texture = SKTexture(imageNamed: "fox\(i)")
@@ -56,7 +52,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         background.position = CGPoint(x: 0, y: 0)
         background.size = self.size
-        background.zPosition = -1
+        background.zPosition = -2
+        
+        cloudsBackground.size = CGSize(width: 5000, height: 236*2)
+        cloudsBackground.zPosition = -1  // Set it behind the initial background
+        cloudsBackground.position = CGPoint(x: background.position.x, y: -236/4 - 20)
+
+        self.addChild(cloudsBackground)
 
         playerFigure.position = CGPoint(x: player.getX(), y: player.getY())
         playerFigure.size = CGSize(width: Player.PLAYER_WIDTH, height: Player.PLAYER_HEIGTH)
@@ -83,6 +85,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(jumpSound)
         jumpSound.run(SKAction.stop())
         
+        let animationAction = SKAction.animate(with: foxTextures, timePerFrame: 0.1)
+        let repeatAction = SKAction.repeatForever(animationAction)
+        playerFigure.run(repeatAction, withKey: "foxAnimation")
+        
         physicsWorld.contactDelegate = self
     }
     
@@ -91,19 +97,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         if contactMask == (playerCategory | penCategory) {
             if contact.bodyA.categoryBitMask == penCategory {
-                // Remove the pen from the scene
                 if let penNode = contact.bodyA.node as? SKSpriteNode {
                     penNode.removeFromParent()
                 }
             } else if contact.bodyB.categoryBitMask == penCategory {
-                // Remove the pen from the scene
                 if let penNode = contact.bodyB.node as? SKSpriteNode {
                     penNode.removeFromParent()
                 }
             }
         }
     }
-
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let playerPhysicsBody = playerFigure.physicsBody {
@@ -116,7 +119,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    // Update your touchesEnded method
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         let ritardo = SKAction.wait(forDuration: 1.0)
         let azioneSuccessiva = SKAction.run {
@@ -126,46 +128,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         playerFigure.run(sequenza)
     }
     
-    
-    var frameCounter: Int = 0
     override func update(_ currentTime: TimeInterval) {
-        frameCounter += 1
-
-        if frameCounter % 50 == 0 {
-
-            let animationAction = SKAction.animate(with: foxTextures, timePerFrame: 0.1)
-            playerFigure.run(animationAction)
-
-            frameCounter = 0
-        }
-
         let moveAction = SKAction.moveBy(x: 3.0, y: 0, duration: 0)
-        playerFigure.run(moveAction)
+        playerFigure.run(moveAction, withKey: "foxMovement")
 
         background.position.x = playerFigure.position.x
+        cloudsBackground.position.x = background.position.x
+
         cameraNode.position.x = playerFigure.position.x
-        
+
         if Int(playerFigure.position.x + frame.width/2) > lastXPixel {
             generateRandomTerrain(isStartTerrain: false)
             deallocateUnusedTerrain()
         }
-        
+
         if playerFigure.position.y < -500 {
             gameRunning = false
             playerFigure.removeFromParent()
-            let scores : Int = Int(playerFigure.position.x)
+            let scores: Int = Int(playerFigure.position.x)
             UserDefaults.standard.set(scores, forKey: "Score")
             UserDefaults.standard.synchronize()
-          
+
             if  gameRunning == false {
                 let gameOverScene = GameOverScene(size: size)
                 gameOverScene.scaleMode = scaleMode
                 view!.presentScene(gameOverScene)
-            
             }
         }
     }
-   
+
     func generateRandomTerrain(isStartTerrain: Bool) {
         if isStartTerrain {
             generateStartTerrain()
@@ -187,41 +178,59 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func generateRegularTerrain() {
-        for _ in 0..<40 {
-            if shouldSpawnJumpChunk() {
-                generateJumpChunk()
-            } else {
-                let terrainTypes = ["terrain1", "terrain2", "terrain3"]
-                let terrainWidths = [48, 32, 32]
-                let (randomType, randomWidth) = getRandomTerrainTypeAndWidth(types: terrainTypes, widths: terrainWidths)
-                let terrain = createTerrain(imageNamed: randomType, width: randomWidth, height: terrainHeight)
-                positionAndAddTerrain(terrain, yOffset: terrainYOffset)
-                positionAndAddUnderground(lastWidth: randomWidth, yOffset: terrainYOffset)
-                generatedTerrainNodes.append(terrain)
-                
-                if Int(arc4random_uniform(UInt32(4))) == 1 {
-                    spawnTree(at: CGPoint(x: lastXPixel - 20, y: Int(-frame.size.height)/2 + 206), yOffset: terrainYOffset)
-                }
+          var terrainSurfacePositions: [(x: CGFloat, y: CGFloat)] = []
+
+          for _ in 0..<40 {
+              if shouldSpawnJumpChunk() {
+                  generateJumpChunk()
+              } else {
+                  let terrainTypes = ["terrain1", "terrain2", "terrain3"]
+                  let terrainWidths = [48, 32, 32]
+                  let (randomType, randomWidth) = getRandomTerrainTypeAndWidth(types: terrainTypes, widths: terrainWidths)
+                  let terrain = createTerrain(imageNamed: randomType, width: randomWidth, height: terrainHeight)
+                  positionAndAddTerrain(terrain, yOffset: terrainYOffset)
+                  terrainSurfacePositions.append((x: terrain.position.x, y: terrain.position.y))
+                  positionAndAddUnderground(lastWidth: randomWidth, yOffset: terrainYOffset)
+
+                  if Int(arc4random_uniform(UInt32(4))) == 1 {
+                      spawnTree(at: CGPoint(x: lastXPixel - 20, y: Int(-frame.size.height)/2 + 206), yOffset: terrainYOffset)
+                  }
+              }
+          }
+        
+            if hasConsecutiveGrassTerrains(terrainSurfacePositions) {
+                print("yes")
+                let lastTerrainPosition = terrainSurfacePositions.last!
+                let spawnPoint = CGPoint(x: lastTerrainPosition.x, y: lastTerrainPosition.y)
+                spawnFences(at: spawnPoint)
+            }
+        
+            let positionWhereToSpawn = getRandomTerrainFromLastNum(terrainSurfacePositions, lastElements: 20)
+            spawnCollectibleItem(x: positionWhereToSpawn.x, y: positionWhereToSpawn.y + CGFloat(terrainHeight) + 10, nameImage: "pen")
+      }
+    
+    func hasConsecutiveGrassTerrains(_ positions: [(x: CGFloat, y: CGFloat)]) -> Bool {
+        guard positions.count >= 3 else {
+            return false
+        }
+
+        let tolerance: CGFloat = 1.0
+
+        for i in 2..<positions.count {
+            if abs(positions[i].x - positions[i-1].x) > tolerance || abs(positions[i-1].x - positions[i-2].x) > tolerance {
+                return false
             }
         }
 
-        guard let terrainAboveToSpawn = getRandomTerrainFromLastNum(lastElements: 20) else {
-            print("Not enough terrain nodes available.")
-            return
-        }
-
-        spawnCollectibleItem(x: terrainAboveToSpawn.position.x, y: CGFloat(Int(terrainAboveToSpawn.position.y) + terrainHeight + 20), nameImage: "pen")
+        return true
     }
-    
-    func getRandomTerrainFromLastNum(lastElements: Int) -> SKSpriteNode? {
-        guard generatedTerrainNodes.count >= lastElements else {
-            // Ensure there are at least 20 elements in the array
-            return nil
-        }
 
-        let startIndex = generatedTerrainNodes.count - lastElements
+    
+    func getRandomTerrainFromLastNum(_ positions: [(x: CGFloat, y: CGFloat)], lastElements: Int) -> (x: CGFloat, y: CGFloat) {
+
+        let startIndex = positions.count - lastElements
         let randomIndex = Int(arc4random_uniform(UInt32(lastElements)))
-        return generatedTerrainNodes[startIndex + randomIndex]
+        return positions[startIndex + randomIndex]
     }
     
     func positionAndAddUnderground(lastWidth: Int, yOffset: Int) {
@@ -259,6 +268,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let randomWidth = widths[randomTerrainIndex]
         return (randomType, randomWidth)
     }
+    
+    func spawnFence(imageNamed: String, position: CGPoint) {
+        let fence = SKSpriteNode(imageNamed: imageNamed)
+        fence.size = CGSize(width: 32, height: terrainHeight)
+        fence.position = position
+        fence.zPosition = 0
+
+        generatedTerrainNodes.append(fence)
+        self.addChild(fence)
+    }
+    
+    func spawnFences(at position: CGPoint) {
+        spawnFence(imageNamed: "fence1", position: position)
+        spawnFence(imageNamed: "fence2", position: CGPoint(x: position.x + 32, y: position.y))
+        spawnFence(imageNamed: "fence3", position: CGPoint(x: position.x + 64, y: position.y))
+    }
 
     func createTerrain(imageNamed: String, width: Int, height: Int) -> SKSpriteNode {
         let terrain = SKSpriteNode(imageNamed: imageNamed)
@@ -290,8 +315,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         {
             terrainYOffset += (Int(arc4random_uniform(UInt32(4)))) * 20
             
-            if terrainYOffset > 380 {
-                terrainYOffset = 380;
+            if terrainYOffset > 330 {
+                terrainYOffset = 330;
             }
         }
         else {
@@ -328,14 +353,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         collectibleItem.physicsBody = SKPhysicsBody(rectangleOf: collectibleItem.size)
         collectibleItem.physicsBody?.isDynamic = false
-        collectibleItem.physicsBody?.categoryBitMask = penCategory // Set a unique category for the pen
-        collectibleItem.physicsBody?.contactTestBitMask = playerCategory // Set the category that will contact with the pen
-        collectibleItem.physicsBody?.collisionBitMask = 0 // No collision with anything
+        collectibleItem.physicsBody?.categoryBitMask = penCategory
+        collectibleItem.physicsBody?.contactTestBitMask = playerCategory
+        collectibleItem.physicsBody?.collisionBitMask = 0
 
         collectibleItem.zPosition = 1
 
+        let floatUpAction = SKAction.moveBy(x: 0, y: 10, duration: 1.0)
+        floatUpAction.timingMode = .easeInEaseOut
+        let floatDownAction = SKAction.moveBy(x: 0, y: -10, duration: 1.0)
+        floatDownAction.timingMode = .easeInEaseOut
+        let floatSequence = SKAction.sequence([floatUpAction, floatDownAction])
+        let floatForever = SKAction.repeatForever(floatSequence)
+        collectibleItem.run(floatForever)
+
         self.addChild(collectibleItem)
     }
+
 
     func generateRandomTreeColor() -> UIColor {
         // Generate random RGB values
