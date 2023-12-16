@@ -199,7 +199,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
           }
         
             if hasConsecutiveGrassTerrains(terrainSurfacePositions) {
-                print("yes")
                 let lastTerrainPosition = terrainSurfacePositions.last!
                 let spawnPoint = CGPoint(x: lastTerrainPosition.x, y: lastTerrainPosition.y)
                 spawnFences(at: spawnPoint)
@@ -247,11 +246,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             actualY -= terrainHeight;
         }
     }
+    
+    func positionAndAddUndergroundEdge(yOffset: Int, xOffset: Int = 0) {
+        let terrainHeight = 64
+        let backgroundTerrainX = lastXPixel - (25) / 2
+        var actualY = yOffset + 38
+
+        while actualY > -64 {
+            let terrain = createTerrain(imageNamed: "underground_eot", width: 25, height: terrainHeight)
+            terrain.position = CGPoint(x: backgroundTerrainX + xOffset, y: Int(-frame.size.height) / 2 + actualY)
+            generatedTerrainNodes.append(terrain)
+            self.addChild(terrain)
+            actualY -= terrainHeight;
+        }
+    }
 
     func generateJumpChunk() {
         let terrain = createTerrain(imageNamed: "endt2", width: 32, height: terrainHeight)
         positionAndAddTerrain(terrain, yOffset: terrainYOffset)
-        positionAndAddUnderground(lastWidth: 32, yOffset: terrainYOffset)
+        positionAndAddUndergroundEdge(yOffset: terrainYOffset, xOffset: -10)
         
         lastXPixel += 100 + Int(arc4random_uniform(UInt32(2))) * 50
 
@@ -259,7 +272,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let terrain2 = createTerrain(imageNamed: "endt1", width: 32, height: terrainHeight)
         positionAndAddTerrain(terrain2, yOffset: terrainYOffset)
-        positionAndAddUnderground(lastWidth: 32, yOffset: terrainYOffset)
+        positionAndAddUndergroundEdge(yOffset: terrainYOffset)
     }
 
     func getRandomTerrainTypeAndWidth(types: [String], widths: [Int]) -> (String, Int) {
