@@ -35,6 +35,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var terrainYOffset = 100;
     
     var generatedTerrainNodes: [SKSpriteNode] = []
+    
+    var coinCollected = false
+    
+    var penCollected = 0
 
     override func didMove(to view: SKView) {
         self.addChild(backgroundSound)
@@ -82,9 +86,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(background)
         self.addChild(playerFigure)
-        
-        self.addChild(pickupCoinSound)
+       
         pickupCoinSound.run(SKAction.stop())
+        self.addChild(pickupCoinSound)
+
         self.addChild(jumpSound)
         jumpSound.run(SKAction.stop())
         
@@ -92,23 +97,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let repeatAction = SKAction.repeatForever(animationAction)
         playerFigure.run(repeatAction, withKey: "foxAnimation")
         
+        penCollected = 0
+        
         physicsWorld.contactDelegate = self
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+         let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
 
-        if contactMask == (playerCategory | penCategory) {
-            if contact.bodyA.categoryBitMask == penCategory {
-                if let penNode = contact.bodyA.node as? SKSpriteNode {
-                    penNode.removeFromParent()
-                }
-            } else if contact.bodyB.categoryBitMask == penCategory {
-                if let penNode = contact.bodyB.node as? SKSpriteNode {
-                    penNode.removeFromParent()
-                }
+         if contactMask == (playerCategory | penCategory) {
+             if contact.bodyA.categoryBitMask == penCategory {
+                 if let penNode = contact.bodyA.node as? SKSpriteNode {
+                     collectCoin(penNode)
+                     penCollected += 1
+                 }
+             } else if contact.bodyB.categoryBitMask == penCategory {
+                 if let penNode = contact.bodyB.node as? SKSpriteNode {
+                     collectCoin(penNode)
+                     penCollected += 1
+                 }
+             }
+         }
+     }
+
+    func collectCoin(_ penNode: SKSpriteNode) {
+        penNode.removeFromParent()
+        
+        self.pickupCoinSound.run(SKAction.play())
+        run(SKAction.sequence([
+            SKAction.wait(forDuration: 0.22),
+            SKAction.run {
+                self.pickupCoinSound.run(SKAction.stop())
             }
-        }
+        ]))
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -148,7 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if playerFigure.position.y < -500 {
             gameRunning = false
             playerFigure.removeFromParent()
-            let scores: Int = Int(playerFigure.position.x)
+            let scores: Int = Int(playerFigure.position.x*(1.0 + CGFloat(penCollected/5)))
             UserDefaults.standard.set(scores, forKey: "Score")
             UserDefaults.standard.synchronize()
 
