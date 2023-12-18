@@ -120,16 +120,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                  }
              }
          }
-        if (penCollected == 3){
-            self.penSound.run(SKAction.play())
-            run(SKAction.sequence([
-                SKAction.wait(forDuration: 0.22),
-                SKAction.run {
-                    self.penSound.run(SKAction.stop())
-                }
-            ]))
-            
-        }
+      
      }
 
     func collectCoin(_ penNode: SKSpriteNode) {
@@ -183,7 +174,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
       
        
     
-        
+        if (penCollected == 3){
+            self.penSound.run(SKAction.play())
+            run(SKAction.sequence([
+                SKAction.wait(forDuration: 0.22),
+                SKAction.run {
+                    self.penSound.run(SKAction.stop())
+                }
+            ]))
+            
+        }
         
 
         if Int(playerFigure.position.x + frame.width/2) > lastXPixel {
@@ -254,10 +254,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 spawnFences(at: spawnPoint)
             }
         
-        for i in 1...2 {
+       
             let positionWhereToSpawn = getRandomTerrainFromLastNum(terrainSurfacePositions, lastElements: 20)
-            spawnCollectibleItem(x: positionWhereToSpawn.x, y: positionWhereToSpawn.y + CGFloat(terrainHeight) + CGFloat(10 * i), nameImage: "pen")
-        }
+            spawnCollectibleItem(x: positionWhereToSpawn.x, y: positionWhereToSpawn.y + CGFloat(terrainHeight) + 10, nameImage: "pen")
+        
     
         }
       
