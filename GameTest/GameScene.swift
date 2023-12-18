@@ -16,6 +16,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var cameraNode = SKCameraNode()
     var numeroCollisioni = 0
     let jumpSound = SKAudioNode(fileNamed: "Jump Effect.mp3")
+    let pickupCoinSound = SKAudioNode(fileNamed: "pickupCoin.mp3")
     let backgroundSound = SKAudioNode(fileNamed: "Music.mp3")
    
     var foxTextures: [SKTexture] = []
@@ -82,6 +83,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(background)
         self.addChild(playerFigure)
         
+        self.addChild(pickupCoinSound)
+        pickupCoinSound.run(SKAction.stop())
         self.addChild(jumpSound)
         jumpSound.run(SKAction.stop())
         
@@ -261,8 +264,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
+    func createRoundedTopTerrain(imageNamed: String, width: CGFloat, height: CGFloat, radius: CGFloat) -> SKSpriteNode {
+        let terrain = createTerrain(imageNamed: imageNamed, width: Int(width), height: Int(height))
+        
+        let roundedPath = UIBezierPath()
+        roundedPath.move(to: CGPoint(x: -width / 2, y: height / 2))
+        roundedPath.addLine(to: CGPoint(x: width / 2, y: height / 2))
+        roundedPath.addArc(withCenter: CGPoint(x: width / 2 - radius, y: height / 2 - radius), radius: radius, startAngle: 0, endAngle: CGFloat.pi, clockwise: false)
+        roundedPath.addLine(to: CGPoint(x: -width / 2 + radius, y: height / 2 - radius * 2))
+        roundedPath.addArc(withCenter: CGPoint(x: -width / 2 + radius, y: height / 2 - radius), radius: radius, startAngle: CGFloat.pi, endAngle: 0, clockwise: false)
+
+        let shapeNode = SKShapeNode(path: roundedPath.cgPath)
+
+        shapeNode.fillTexture = terrain.texture
+
+        let containerNode = SKNode()
+        containerNode.addChild(shapeNode)
+        containerNode.position = terrain.position
+        terrain.removeFromParent()
+        self.addChild(containerNode)
+
+        return terrain
+    }
+
     func generateJumpChunk() {
-        let terrain = createTerrain(imageNamed: "endt2", width: 32, height: terrainHeight)
+        let terrain = createRoundedTopTerrain(imageNamed: "endt2", width: 32, height: CGFloat(terrainHeight), radius: 5)
         positionAndAddTerrain(terrain, yOffset: terrainYOffset)
         positionAndAddUndergroundEdge(yOffset: terrainYOffset, xOffset: -10)
         
@@ -270,7 +296,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         adjustTerrainYOffset()
         
-        let terrain2 = createTerrain(imageNamed: "endt1", width: 32, height: terrainHeight)
+        let terrain2 = createRoundedTopTerrain(imageNamed: "endt1", width: 32, height: CGFloat(terrainHeight), radius: 5)
         positionAndAddTerrain(terrain2, yOffset: terrainYOffset)
         positionAndAddUndergroundEdge(yOffset: terrainYOffset)
     }
@@ -298,9 +324,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         spawnFence(imageNamed: "fence3", position: CGPoint(x: position.x + 64, y: position.y))
     }
 
-    func createTerrain(imageNamed: String, width: Int, height: Int) -> SKSpriteNode {
+    func createTerrain(imageNamed: String, width: Int, height: Int, radius: CGFloat = 0) -> SKSpriteNode {
         let terrain = SKSpriteNode(imageNamed: imageNamed)
         terrain.size = CGSize(width: width, height: height)
+
+        if radius > 0 {
+            let roundedTerrain = createRoundedTopTerrain(imageNamed: imageNamed, width: CGFloat(width), height: CGFloat(height), radius: radius)
+            return roundedTerrain
+        }
+
         terrain.physicsBody = SKPhysicsBody(rectangleOf: terrain.size)
         terrain.physicsBody?.isDynamic = false
         terrain.physicsBody?.categoryBitMask = groundCategory
