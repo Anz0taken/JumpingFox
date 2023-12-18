@@ -1,13 +1,14 @@
 //
-//  GameOverScene.swift
+//  HomeScreenScene.swift
 //  GameTest
 //
-//  Created by Domenico Mennillo on 12/12/23.
+//  Created by Domenico Mennillo on 18/12/23.
 //
+
 import SpriteKit
 
 
-class GameOverScene: SKScene {
+class HomeScreenScene: SKScene {
     
     override func didMove(to view: SKView) {
         
@@ -25,30 +26,36 @@ class GameOverScene: SKScene {
         //        aggiungiPunteggio(scores)
         //
         
+        let ScoreLabel = SKSpriteNode(imageNamed: "ScoreB")
+        ScoreLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 - 50)
+        //        let scala = CGFloat(1.5)
+        //        gameOverLabel.setScale(scala)
         
-        let gameOverLabel = SKSpriteNode(imageNamed: "GameOverB")
-        gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 + 50)
-        let scala = CGFloat(1.5)
-        gameOverLabel.setScale(scala)
+        addChild(ScoreLabel)
         
-        let colore : UIColor = UIColor(red: 0.24, green: 0.71, blue: 0, alpha: 100)
-        let mioScore = UserDefaults.standard.integer(forKey: "Score")
-        let scoreLabel = SKLabelNode(fontNamed: "PixelifySans-Medium")
-        scoreLabel.text = "Score : \(mioScore) "
-        scoreLabel.fontSize = 80
-        scoreLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 + 160)
-        scoreLabel.zPosition = 2
-        scoreLabel.fontColor = colore
+        //        let gameOverLabel = SKSpriteNode(imageNamed: "GameOverB")
+        //        gameOverLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 + 50)
+        //        let scala = CGFloat(1.5)
+        //        gameOverLabel.setScale(scala)
         
         
-        addChild(gameOverLabel)
-        addChild(scoreLabel)
+     
+        
+        
+        //        addChild(scoreLabel)
         // Aggiungi un pulsante per ricominciare il gioco
-        let restartButton = SKSpriteNode(imageNamed: "RestartB") // Sostituisci "restartButtonImage" con il nome effettivo dell'immagine del pulsante
-                restartButton.position = CGPoint(x: size.width / 2, y: size.height / 2 - 100)
-                restartButton.name = "restartButton"
-                addChild(restartButton)
+        let restartButton = SKSpriteNode(imageNamed: "StartB") // Sostituisci "restartButtonImage" con il nome effettivo dell'immagine del pulsante
+        restartButton.position = CGPoint(x: size.width / 2, y: size.height / 2 + 50)
+        restartButton.name = "restartButton"
+        addChild(restartButton)
+        
+        let SettLabel = SKSpriteNode(imageNamed: "SettB")
+        SettLabel.position = CGPoint(x: size.width / 2, y: size.height / 2 - 100)
+        //        let scala = CGFloat(1.5)
+        //        gameOverLabel.setScale(scala)
+        addChild(SettLabel)
     }
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Gestisci i tocchi sulla scena

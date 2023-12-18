@@ -144,7 +144,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let ritardo = SKAction.wait(forDuration: 1.0)
+        let ritardo = SKAction.wait(forDuration: 0.3)
         let azioneSuccessiva = SKAction.run {
             self.jumpSound.run(SKAction.stop())
         }
@@ -169,7 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if playerFigure.position.y < -500 {
             gameRunning = false
             playerFigure.removeFromParent()
-            let scores: Int = Int(playerFigure.position.x*(1.0 + CGFloat(penCollected/5)))
+            let scores: Int = Int((playerFigure.position.x*(1.0 + CGFloat(penCollected/5)))/100)
             UserDefaults.standard.set(scores, forKey: "Score")
             UserDefaults.standard.synchronize()
 

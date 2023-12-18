@@ -20,10 +20,12 @@
 		A0CDEDDE2B1DD51A006F7AD8 /* GameTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDEDDD2B1DD51A006F7AD8 /* GameTestTests.swift */; };
 		A0CDEDE82B1DD51A006F7AD8 /* GameTestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDEDE72B1DD51A006F7AD8 /* GameTestUITests.swift */; };
 		A0CDEDEA2B1DD51A006F7AD8 /* GameTestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDEDE92B1DD51A006F7AD8 /* GameTestUITestsLaunchTests.swift */; };
-		A0F65A172B30388600AC4E01 /* pickupCoin.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A0F65A162B30388600AC4E01 /* pickupCoin.mp3 */; };
 		DA9309FE2B289AD900BC1A21 /* Music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA9309FD2B289AD900BC1A21 /* Music.mp3 */; };
 		DA930A002B28A13100BC1A21 /* Jump Effect.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DA9309FF2B28A13100BC1A21 /* Jump Effect.mp3 */; };
 		DAC6BAF72B2867D000857506 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC6BAF62B2867D000857506 /* GameOverScene.swift */; };
+		DAF2CADA2B3042DC0066CF53 /* PixelifySans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAF2CAD92B3042DC0066CF53 /* PixelifySans-Medium.ttf */; };
+		DAF2CADF2B3044630066CF53 /* pickupCoin.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAF2CADE2B3044630066CF53 /* pickupCoin.mp3 */; };
+		DAF2CAE42B3046840066CF53 /* HomeScreenScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF2CAE32B3046840066CF53 /* HomeScreenScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,11 +62,14 @@
 		A0CDEDE32B1DD51A006F7AD8 /* GameTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0CDEDE72B1DD51A006F7AD8 /* GameTestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTestUITests.swift; sourceTree = "<group>"; };
 		A0CDEDE92B1DD51A006F7AD8 /* GameTestUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTestUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		A0F65A162B30388600AC4E01 /* pickupCoin.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = pickupCoin.mp3; path = ../../../../Downloads/pickupCoin.mp3; sourceTree = "<group>"; };
 		DA9309FD2B289AD900BC1A21 /* Music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Music.mp3; sourceTree = "<group>"; };
 		DA9309FF2B28A13100BC1A21 /* Jump Effect.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Jump Effect.mp3"; sourceTree = "<group>"; };
 		DAC6BAF62B2867D000857506 /* GameOverScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 		DAD8F62B2B24BDB50005018D /* info_plist.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = info_plist.xcconfig; sourceTree = "<group>"; };
+		DAF2CAD92B3042DC0066CF53 /* PixelifySans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PixelifySans-Medium.ttf"; sourceTree = "<group>"; };
+		DAF2CADB2B3043430066CF53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DAF2CADE2B3044630066CF53 /* pickupCoin.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = pickupCoin.mp3; sourceTree = "<group>"; };
+		DAF2CAE32B3046840066CF53 /* HomeScreenScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,15 +130,18 @@
 		A0CDEDC22B1DD519006F7AD8 /* GameTest */ = {
 			isa = PBXGroup;
 			children = (
+				DAF2CADB2B3043430066CF53 /* Info.plist */,
+				DAF2CAD92B3042DC0066CF53 /* PixelifySans-Medium.ttf */,
 				A0CDEDC32B1DD519006F7AD8 /* AppDelegate.swift */,
 				A0CDEDC52B1DD519006F7AD8 /* GameScene.sks */,
 				A0CDEDC72B1DD519006F7AD8 /* Actions.sks */,
+				DAF2CAE32B3046840066CF53 /* HomeScreenScene.swift */,
 				A0CDEDC92B1DD519006F7AD8 /* GameScene.swift */,
 				A0CDEDCB2B1DD519006F7AD8 /* GameViewController.swift */,
 				DAC6BAF62B2867D000857506 /* GameOverScene.swift */,
 				A0CDEDCD2B1DD519006F7AD8 /* Main.storyboard */,
 				DA9309FD2B289AD900BC1A21 /* Music.mp3 */,
-				A0F65A162B30388600AC4E01 /* pickupCoin.mp3 */,
+				DAF2CADE2B3044630066CF53 /* pickupCoin.mp3 */,
 				DA9309FF2B28A13100BC1A21 /* Jump Effect.mp3 */,
 				A0CDEDD02B1DD51A006F7AD8 /* Assets.xcassets */,
 				A0CDEDD22B1DD51A006F7AD8 /* LaunchScreen.storyboard */,
@@ -263,8 +271,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAF2CADA2B3042DC0066CF53 /* PixelifySans-Medium.ttf in Resources */,
 				DA9309FE2B289AD900BC1A21 /* Music.mp3 in Resources */,
-				A0F65A172B30388600AC4E01 /* pickupCoin.mp3 in Resources */,
+				DAF2CADF2B3044630066CF53 /* pickupCoin.mp3 in Resources */,
 				A0CDEDCF2B1DD519006F7AD8 /* Main.storyboard in Resources */,
 				A0CDEDC62B1DD519006F7AD8 /* GameScene.sks in Resources */,
 				DA930A002B28A13100BC1A21 /* Jump Effect.mp3 in Resources */,
@@ -296,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A0CDEDCA2B1DD519006F7AD8 /* GameScene.swift in Sources */,
+				DAF2CAE42B3046840066CF53 /* HomeScreenScene.swift in Sources */,
 				A075290D2B1F33370068FD50 /* PlayerClass.swift in Sources */,
 				A0CDEDCC2B1DD519006F7AD8 /* GameViewController.swift in Sources */,
 				A0CDEDC42B1DD519006F7AD8 /* AppDelegate.swift in Sources */,
@@ -484,6 +494,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X6PRJW82M3;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GameTest/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -512,6 +523,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = X6PRJW82M3;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GameTest/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

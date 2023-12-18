@@ -13,3 +13,7 @@
 <key>UIInterfaceOrientation</key>
 <string>UIInterfaceOrientationLandscapeRight</string>
 <string>UIInterfaceOrientationLandscapeLeft</string>
+<key>UIAppFonts</key>
+<array>
+    <string>PixelifySans-Medium.ttf</string>
+</array>
