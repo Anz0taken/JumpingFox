@@ -26,6 +26,8 @@
 		DAF2CADA2B3042DC0066CF53 /* PixelifySans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAF2CAD92B3042DC0066CF53 /* PixelifySans-Medium.ttf */; };
 		DAF2CADF2B3044630066CF53 /* pickupCoin.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAF2CADE2B3044630066CF53 /* pickupCoin.mp3 */; };
 		DAF2CAE42B3046840066CF53 /* HomeScreenScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF2CAE32B3046840066CF53 /* HomeScreenScene.swift */; };
+		DAF2CAE82B304D240066CF53 /* fallSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAF2CAE62B304D230066CF53 /* fallSound.mp3 */; };
+		DAF2CAE92B304D240066CF53 /* Yahoo.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DAF2CAE72B304D240066CF53 /* Yahoo.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +72,8 @@
 		DAF2CADB2B3043430066CF53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DAF2CADE2B3044630066CF53 /* pickupCoin.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = pickupCoin.mp3; sourceTree = "<group>"; };
 		DAF2CAE32B3046840066CF53 /* HomeScreenScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenScene.swift; sourceTree = "<group>"; };
+		DAF2CAE62B304D230066CF53 /* fallSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fallSound.mp3; sourceTree = "<group>"; };
+		DAF2CAE72B304D240066CF53 /* Yahoo.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Yahoo.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +145,8 @@
 				DAC6BAF62B2867D000857506 /* GameOverScene.swift */,
 				A0CDEDCD2B1DD519006F7AD8 /* Main.storyboard */,
 				DA9309FD2B289AD900BC1A21 /* Music.mp3 */,
+				DAF2CAE62B304D230066CF53 /* fallSound.mp3 */,
+				DAF2CAE72B304D240066CF53 /* Yahoo.mp3 */,
 				DAF2CADE2B3044630066CF53 /* pickupCoin.mp3 */,
 				DA9309FF2B28A13100BC1A21 /* Jump Effect.mp3 */,
 				A0CDEDD02B1DD51A006F7AD8 /* Assets.xcassets */,
@@ -274,11 +280,13 @@
 				DAF2CADA2B3042DC0066CF53 /* PixelifySans-Medium.ttf in Resources */,
 				DA9309FE2B289AD900BC1A21 /* Music.mp3 in Resources */,
 				DAF2CADF2B3044630066CF53 /* pickupCoin.mp3 in Resources */,
+				DAF2CAE82B304D240066CF53 /* fallSound.mp3 in Resources */,
 				A0CDEDCF2B1DD519006F7AD8 /* Main.storyboard in Resources */,
 				A0CDEDC62B1DD519006F7AD8 /* GameScene.sks in Resources */,
 				DA930A002B28A13100BC1A21 /* Jump Effect.mp3 in Resources */,
 				A0CDEDD12B1DD51A006F7AD8 /* Assets.xcassets in Resources */,
 				A0CDEDD42B1DD51A006F7AD8 /* LaunchScreen.storyboard in Resources */,
+				DAF2CAE92B304D240066CF53 /* Yahoo.mp3 in Resources */,
 				A0CDEDC82B1DD519006F7AD8 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -18,7 +18,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let jumpSound = SKAudioNode(fileNamed: "Jump Effect.mp3")
     let pickupCoinSound = SKAudioNode(fileNamed: "pickupCoin.mp3")
     let backgroundSound = SKAudioNode(fileNamed: "Music.mp3")
-   
+    let fallSound = SKAction.playSoundFileNamed("fallSound.mp3", waitForCompletion: false)
+    let penSound = SKAudioNode(fileNamed: "Yahoo.mp3")
     var foxTextures: [SKTexture] = []
     var onAir : Bool = false
     let playerCategory: UInt32 = 0x1 << 0
@@ -93,6 +94,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(jumpSound)
         jumpSound.run(SKAction.stop())
         
+        
         let animationAction = SKAction.animate(with: foxTextures, timePerFrame: 0.1)
         let repeatAction = SKAction.repeatForever(animationAction)
         playerFigure.run(repeatAction, withKey: "foxAnimation")
@@ -118,6 +120,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                  }
              }
          }
+        if (penCollected == 3){
+            self.penSound.run(SKAction.play())
+            run(SKAction.sequence([
+                SKAction.wait(forDuration: 0.22),
+                SKAction.run {
+                    self.penSound.run(SKAction.stop())
+                }
+            ]))
+            
+        }
      }
 
     func collectCoin(_ penNode: SKSpriteNode) {
@@ -139,20 +151,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 jumpSound.run(SKAction.play())
                 let jumpForce: CGFloat = 30.0
                 playerFigure.physicsBody?.applyImpulse(CGVector(dx: 0, dy: jumpForce))
+                run(SKAction.sequence([
+                    SKAction.wait(forDuration: 0.4),
+                    SKAction.run {
+                        self.jumpSound.run(SKAction.stop())
+                    }
+                ]))
             }
         }
     }
 
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let ritardo = SKAction.wait(forDuration: 0.3)
-        let azioneSuccessiva = SKAction.run {
-            self.jumpSound.run(SKAction.stop())
-        }
-        let sequenza = SKAction.sequence([ritardo, azioneSuccessiva])
-        playerFigure.run(sequenza)
-    }
+//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        let ritardo = SKAction.wait(forDuration: 0.3)
+//        let azioneSuccessiva = SKAction.run {
+//            self.jumpSound.run(SKAction.stop())
+//        }
+//        let sequenza = SKAction.sequence([ritardo, azioneSuccessiva])
+//        playerFigure.run(sequenza)
+//    }
     
     override func update(_ currentTime: TimeInterval) {
+        
         let moveAction = SKAction.moveBy(x: 3.0, y: 0, duration: 0)
         playerFigure.run(moveAction, withKey: "foxMovement")
 
@@ -160,6 +179,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         cloudsBackground.position.x = background.position.x
 
         cameraNode.position.x = playerFigure.position.x
+        
+      
+       
+    
+        
+        
 
         if Int(playerFigure.position.x + frame.width/2) > lastXPixel {
             generateRandomTerrain(isStartTerrain: false)
@@ -167,6 +192,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
 
         if playerFigure.position.y < -500 {
+            run(fallSound)
             gameRunning = false
             playerFigure.removeFromParent()
             let scores: Int = Int((playerFigure.position.x*(1.0 + CGFloat(penCollected/5)))/100)
@@ -228,9 +254,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 spawnFences(at: spawnPoint)
             }
         
+        for i in 1...2 {
             let positionWhereToSpawn = getRandomTerrainFromLastNum(terrainSurfacePositions, lastElements: 20)
-            spawnCollectibleItem(x: positionWhereToSpawn.x, y: positionWhereToSpawn.y + CGFloat(terrainHeight) + 10, nameImage: "pen")
-      }
+            spawnCollectibleItem(x: positionWhereToSpawn.x, y: positionWhereToSpawn.y + CGFloat(terrainHeight) + CGFloat(10 * i), nameImage: "pen")
+        }
+    
+        }
+      
     
     func hasConsecutiveGrassTerrains(_ positions: [(x: CGFloat, y: CGFloat)]) -> Bool {
         guard positions.count >= 3 else {
