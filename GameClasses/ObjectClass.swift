@@ -23,4 +23,10 @@ class Object{
     public func getY() -> Int{
         return self.y_position
     }
+    
+    public func setPos(x: Int, y: Int)
+    {
+        self.x_position = x
+        self.y_position = y
+    }
 }

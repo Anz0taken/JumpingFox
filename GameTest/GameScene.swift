@@ -12,7 +12,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var background = SKSpriteNode(imageNamed: "sky")
     var playerFigure = SKSpriteNode(imageNamed: "fox1")
     let cloudsBackground = SKSpriteNode(imageNamed: "clouds")
-    var player = Player(x_position: 0, y_position: 0)
+    var player = Player(x_position: 1, y_position: 1)
+    
+    var old_x: CGFloat = 0
+    var old_y: CGFloat = 0
+    var new_x: CGFloat = 1
+    var new_y: CGFloat = 1
+    
     var cameraNode = SKCameraNode()
     var numeroCollisioni = 0
     let jumpSound = SKAudioNode(fileNamed: "Jump Effect.mp3")
@@ -69,16 +75,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         playerFigure.position = CGPoint(x: player.getX(), y: player.getY())
         playerFigure.size = CGSize(width: Player.PLAYER_WIDTH, height: Player.PLAYER_HEIGTH)
 
+        // Create a rounded physics body
         playerFigure.physicsBody = SKPhysicsBody(texture: playerFigure.texture!, size: playerFigure.size)
         playerFigure.physicsBody?.affectedByGravity = true
-        playerFigure.physicsBody?.allowsRotation = false // Disable rotation
+        playerFigure.physicsBody?.allowsRotation = false
         playerFigure.physicsBody?.isDynamic = true
         playerFigure.physicsBody?.categoryBitMask = playerCategory
         playerFigure.physicsBody?.collisionBitMask = groundCategory
         playerFigure.physicsBody?.contactTestBitMask = groundCategory
-        playerFigure.physicsBody?.restitution = 0 // No bouncing
-        playerFigure.physicsBody?.linearDamping = 0 // No linear damping
-        playerFigure.physicsBody?.angularDamping = 0 // No angular damping
+        playerFigure.physicsBody?.restitution = 0
+        playerFigure.physicsBody?.linearDamping = 0
+        playerFigure.physicsBody?.angularDamping = 0
+
+        // To make the edges rounded
+        playerFigure.physicsBody?.usesPreciseCollisionDetection = true
 
         playerFigure.zPosition = 1
 
@@ -163,16 +173,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         
+        old_x = new_x
+        old_y = new_y
+        
         let moveAction = SKAction.moveBy(x: 3.0, y: 0, duration: 0)
         playerFigure.run(moveAction, withKey: "foxMovement")
-
         background.position.x = playerFigure.position.x
         cloudsBackground.position.x = background.position.x
-
         cameraNode.position.x = playerFigure.position.x
         
-      
-       
+        new_x = playerFigure.position.x
+        new_y = playerFigure.position.y
+        
+        if(old_x == new_x && old_y == new_y) {
+            print("Stuck! Applying push.")
+            // Push the player at a 135-degree angle (top-left)
+            let pushAction = SKAction.move(by: CGVector(dx: 30.0 * cos(135), dy: 30.0 * sin(135)), duration: 0.5)
+            playerFigure.run(pushAction)
+        }
     
         if (penCollected == 3){
             self.penSound.run(SKAction.play())
