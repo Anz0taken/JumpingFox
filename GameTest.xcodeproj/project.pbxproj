@@ -503,6 +503,7 @@
 				DEVELOPMENT_TEAM = X6PRJW82M3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GameTest/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "The jumping fox";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -532,6 +533,7 @@
 				DEVELOPMENT_TEAM = X6PRJW82M3;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GameTest/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "The jumping fox";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
